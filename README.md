@@ -21,3 +21,13 @@ Com todos os requisitos da instância configurados, prossegui para o próximo ob
 
 ## Configurando NFS com um diretório com o nome "karl"
 
+Diferente de outras distribuições como Debian e Ubuntu, no Amazon Linux 2 o serviço Network File System já vem instalado. Nesse caso, foi necessário somente criar um diretório com o nome "karl".
+O caminho para o diretório é ```/mnt/karl/```
+
+Abaixo, segue imagem evidenciando o serviço NFS online:
+![image](https://github.com/user-attachments/assets/f31881fc-d88c-487f-a2d4-2a8e3b4b525d)
+
+Detalhe, ao iniciar a instância, os serviços do Apache e NFS não estarão rodando. Por esse motivo, também configurei eles para iniciarem junto com o sistema através do comando:
+```sudo systemctl enable httpd``` e ```sudo systemctl enable nfs-server.service```.
+
+Agora, com o diretório no NFS configurado, 
