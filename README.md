@@ -30,4 +30,5 @@ Abaixo, segue imagem evidenciando o serviço NFS online:
 Detalhe, ao iniciar a instância, os serviços do Apache e NFS não estarão rodando. Por esse motivo, também configurei eles para iniciarem junto com o sistema através do comando:
 ```sudo systemctl enable httpd``` e ```sudo systemctl enable nfs-server.service```.
 
-Agora, com o diretório no NFS configurado, 
+Agora, com o diretório no NFS configurado, publiquei o caminho ```/mnt/karl``` através do arquivo ```/etc/exports``` digitando o comando ```/mnt/karl *(rw,sync,no_subtree_check,no_root_squash,insecure)``` para estar 
+acessível por qualquer IP. 
