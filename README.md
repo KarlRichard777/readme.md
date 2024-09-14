@@ -60,8 +60,8 @@ Detalhe importante sobre os dois serviços, ao iniciar a instância, os serviço
 
 ## Trabalhando com scripts de estado dos serviços
 
-Pronto! Agora que temos os dois serviços online e acessíveis, vamos criar um script que valide a cada 5 minutos se eles estão online, onde estará apresentando a data, hora, nome do serviço, status e uma mensagem personalizada.
-Detalhe, esse script deverá enviar o arquivo de saída com o resultado para o diretório compartilhado no NFS.
+Pronto! Agora que temos os dois serviços online e acessíveis, vamos criar um script que valide a cada 5 minutos se o Apache está online, onde será apresentando a data, hora, nome do serviço, status e uma mensagem personalizada.
+Detalhe, esse script deverá enviar dois arquivos de saída (offline e online) com o resultado para o diretório compartilhado no NFS.
 
 Comecei criando um diretório ```scripts``` onde irei armazenar os scripts, e o diretório ```scripts_logs``` onde irei armazenar os arquivos de saída dos scripts. Ambos criados no diretório do NFS em ```/mnt/karl/```.
 
@@ -69,42 +69,74 @@ Comandos: ```mkdir /mnt/karl/scripts``` e ```mkdir /mnt/karl/scripts_logs```.
 
 Agora, dentro do diretório "scripts", criei um arquivo bash (.sh) com as seguintes instruções:
 
-- Para definir o diretório de logs e definir o nome do arquivo de saída:
+- Para verificar o nome do serviço:
 ```
-LOG_DIR="/mnt/karl/scripts_logs"
-LOG_FILE="${LOG_DIR}/services_status_$(date +'%Y-%m-%d').log"
+SERVICE="httpd"
 ```
 
-- Função para verificar o status de um serviço:
+- Verificar data e hora atuais:
+```
+DATE_TIME=$(date '+%Y-%m-%d %H:%M:%S')
+```
+
+- Define onde serão salvos os arquivos gerados : 
+```
+LOG_DIR="/mnt/karl/scripts_logs/"
+ONLINE_FILE="$LOG_DIR/apache_online.log"
+OFFLINE_FILE="$LOG_DIR/apache_offline.log"
+```
+
+- Função que verifica o serviço:
 ```
 check_service() {
     local service_name=$1
-    local service_display_name=$2
+    local log_file=$2
     local service_status
-}
 ```
 
-- Verificar o status do serviço: 
+- Obtendo o status do serviço:
+Para online:
 ```
 if systemctl is-active --quiet "$service_name"; then
         service_status="ONLINE"
-        echo "$(date +'%Y-%m-%d %H:%M:%S') - Serviço: $service_display_name - Status: $service_status - O serviço está funcionando corretamente." >> "$LOG_FILE"
+        {
+            echo "  Data e Hora: $DATE_TIME"
+            echo "  Serviço: $service_name"
+            echo "  Status: $service_status"
+            echo "  Mensagem personalizada:
+```
+
+Para offline:
+```
+  } >> "$log_file"
     else
         service_status="OFFLINE"
-        echo "$(date +'%Y-%m-%d %H:%M:%S') - Serviço: $service_display_name - Status: $service_status - ATENÇÃO: O serviço não está em execução!" >> "$LOG_FILE"
-    fi
+        {
+            echo "  Data e Hora: $DATE_TIME"
+            echo "  Serviço: $service_name"
+            echo "  Status: $service_status"
+            echo "  Mensagem personalizada:
 ```
-
-- E por fim, verificar os serviços do Apache e NFS:
-```
-check_service "httpd" "Apache"
-check_service "nfs-server" "NFS"
-```
-
 Com o script montado, salvei ele como ```apache_nfs_status.sh``` no diretório ```/mnt/karl/scripts``` e configurei a permissão de execução do script através do comando:
 ```
 chmod +x /mnt/karl/scripts/apache_nfs_status.sh
 ```
 
-Para testar o funcionamento do script, executei o mesmo através do comando ```./apache_nfs_status.sh```. Onde o mesmo gerou um arquivo de saída .log no diretório com o seguinte conteúdo:
+Personalizei a mensagem de resultado com um esquema de fonte onde mostra uma mensagem de Serviço online ou offline.
 
+- Agora, finalizamos com a verificação do status do serviço e registra no arquivo correspondente:
+```
+if systemctl is-active --quiet $SERVICE; then
+    check_service $SERVICE $ONLINE_FILE
+else
+    check_service $SERVICE $OFFLINE_FILE
+fi
+```
+
+Após finalizar o script, salvei e mudei a permissão dele para executável através do comando ```chmod +x apache_status.sh```, e para testar o funcionamento do script, executei o mesmo através do comando ```./apache_status.sh```. Onde foi gerado um arquivo de saída .log no diretório com o data, hora, status, serviço e uma mensagem personalizada de online ou offline.
+
+Abaixo, veja imagens do resultado com o Apache online e offline:
+
+## Concluíndo o projeto
+
+Após todos esses processos, agora temos um ambiente público Linux com serviço de NFS e Apache online e operante para subir qualquer tipo de serviço e um monitoramento básico para verificar se está UP ou DOWN. E com esse README e seus versionamentos, podemos subir esse mesmo ambiente em outras instâncias caso for necessário e também podemos aprimorá-lo, pois agora teremos um passo a passo bem detalhado sobre todos os comandos e requisitos para configurar tudo corretamente e suas versões para cada atualização e melhoria que for aplicada.
