@@ -13,7 +13,10 @@ No momento da seleção das especificações da instância, em tempo, criei uma 
 E juntamente, criei um security group com as regras inbound para as devidas portas citadas anteriormente serem liberadas.
 Antes de lançar a instância também gerei um arquivo .ppk para poder acessá-la através de uma conexão SSH.
 
-Com a instância criada, executei o teste de conexão via Putty, onde consegui abrir uma sessão com o user ec2-user. Abaixo, imagem evidenciando a conexão bem sucedida.
+Com a instância criada, executei o teste de conexão via Putty, onde consegui abrir uma sessão com o user ec2-user. Abaixo, imagem evidenciando a conexão bem sucedida:
+
+![image](https://github.com/user-attachments/assets/7ac8a294-cf3d-4438-95ce-85567dd36ccf)
+
 
 Após esse procedimento, vinculei um Elastic IP para a instância com o IP 44.221.5.127 para poder acessar através deste IP.
 
@@ -34,6 +37,8 @@ acessível por qualquer IP.
 Abaixo uma imagem demonstrando o arquivo publicado e devidamente montado em uma outra máquina:
 
 ![image](https://github.com/user-attachments/assets/535b0ff1-4a1c-4782-a848-74aa2543c7a0)
+
+Montagem em outra máquina Linux:
 
 ![image](https://github.com/user-attachments/assets/538abdfb-1c7d-4248-b7bc-498bcb9b1368)
 
@@ -136,6 +141,15 @@ fi
 Após finalizar o script, salvei e mudei a permissão dele para executável através do comando ```chmod +x apache_status.sh```, e para testar o funcionamento do script, executei o mesmo através do comando ```./apache_status.sh```. Onde foi gerado um arquivo de saída .log no diretório com o data, hora, status, serviço e uma mensagem personalizada de online ou offline.
 
 Abaixo, veja imagens do resultado com o Apache online e offline:
+
+Quando está ONLINE:
+
+![image](https://github.com/user-attachments/assets/7b1bb00e-765a-44c7-a5b6-f6e26879e05d)
+
+Quando está OFFLINE:
+
+![image](https://github.com/user-attachments/assets/a2076ac0-b902-4ba8-860c-808c61fbf820)
+
 
 ## Concluíndo o projeto
 
