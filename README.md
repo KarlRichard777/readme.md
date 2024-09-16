@@ -5,13 +5,29 @@
 
 Neste documento vamos encontrar o processo de instalação e configuração de um ambiente Linux na AWS. Onde será configurado um Network File System e um Apache com alguns scripts de monitoramento dos serviços.
 
-## Criando ambiente
+## Criando ambiente Linux
 
 Começando pela AWS, vamos gerar uma instância EC2 a partir de uma imagem Amazon Linux 2 com as características t3.small, 16GB de SSD e com as portas de comunicação para acesso público 22, 111, 2049, 80 e 443.
+
+Selecionando AMI:
+
+![image](https://github.com/user-attachments/assets/fe9f3acd-cb3d-47c0-9848-8d75deca6b63)
+
+Definindo o tipo de instância:
+
+![image](https://github.com/user-attachments/assets/860cd064-5d23-4a65-9124-1aca6eadcd0a)
 
 No momento da seleção das especificações da instância, em tempo, criei uma VPC nova, com uma subnet pública, com uma tabela de rotas para um gateway de internet para dessa forma a instância ter rota para a internet.
 E juntamente, criei um security group com as regras inbound para as devidas portas citadas anteriormente serem liberadas.
 Antes de lançar a instância também gerei um arquivo .ppk para poder acessá-la através de uma conexão SSH.
+
+Abaixo, as configurações de rede: 
+
+![image](https://github.com/user-attachments/assets/64c1f5c9-31da-41e0-bc11-ce6ba2f4db01)
+
+Disco necessário:
+
+![image](https://github.com/user-attachments/assets/abe01b43-c26e-4ba5-9230-7d5e71832e63)
 
 Com a instância criada, executei o teste de conexão via Putty, onde consegui abrir uma sessão com o user ec2-user. Abaixo, imagem evidenciando a conexão bem sucedida:
 
@@ -20,7 +36,12 @@ Com a instância criada, executei o teste de conexão via Putty, onde consegui a
 
 Após esse procedimento, vinculei um Elastic IP para a instância com o IP 44.221.5.127 para poder acessar através deste IP.
 
-Com todos os requisitos da instância configurados, prossegui para o próximo objetivo que é configurar um NFS e um Apache com alguns scripts.
+Abaixo, o sumário do IP elástico configurado:
+
+![image](https://github.com/user-attachments/assets/6aecea77-770e-4fab-bdc3-0c0e89f05770)
+
+
+Com todos os requisitos da instância configurados e com o Linux operante, prossegui para o próximo objetivo que é configurar um NFS e um Apache com alguns scripts.
 
 ## Configurando NFS com um diretório com o nome "karl"
 
@@ -31,7 +52,8 @@ Abaixo, segue imagem evidenciando o serviço NFS online:
 
 ![image](https://github.com/user-attachments/assets/f31881fc-d88c-487f-a2d4-2a8e3b4b525d)
 
-Agora, com o diretório no NFS configurado, publiquei o caminho ```/mnt/karl``` através do arquivo ```/etc/exports``` digitando o comando ```/mnt/karl *(rw,sync,no_subtree_check,no_root_squash,insecure)``` para estar 
+Por questões de segurança, como está requisitado um diretório específico para a saída do script que vamos configurar em seguida, nesse diretório criado, acrescentei mais dois diretórios, o "scripts" e "scripts_logs". Dessa forma, o caminho que vou compartilhar será o "scripts_logs" para estar acessível para quem for acessar, onde o usuário não terá acesso aos comandos do script que estará dentro do diretório "scripts".
+Agora, com o diretório no NFS configurado, publiquei o caminho ```/mnt/karl/scripts_logs``` através do arquivo ```/etc/exports``` digitando o comando ```/mnt/karl/scripts_logs *(rw,sync,no_subtree_check,no_root_squash,insecure)``` para estar 
 acessível por qualquer IP. 
 
 Abaixo uma imagem demonstrando o arquivo publicado e devidamente montado em uma outra máquina:
