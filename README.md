@@ -58,13 +58,13 @@ acessível por qualquer IP.
 
 Abaixo uma imagem demonstrando o arquivo publicado e devidamente montado em uma outra máquina:
 
-![image](https://github.com/user-attachments/assets/535b0ff1-4a1c-4782-a848-74aa2543c7a0)
+![image](https://github.com/user-attachments/assets/7e3e11c5-946e-4013-9ffd-934451eb2863)
 
 Montagem em outra máquina Linux:
 
-![image](https://github.com/user-attachments/assets/538abdfb-1c7d-4248-b7bc-498bcb9b1368)
+![image](https://github.com/user-attachments/assets/fef8bf2f-3a23-4f92-b8cd-3d9dd554a9e0)
 
-A montagem do NFS foi feita em um Ubuntu através do comando ```sudo mount 44.221.5.127:/mnt/karl /mnt/karl```.
+A montagem do NFS foi feita em um Ubuntu através do comando ```sudo mount 44.221.5.127:/mnt/karl/scripts_logs /mnt/karl/scripts_logs```.
 
 ## Subindo o Apache
 
